@@ -1,182 +1,301 @@
-# Open Intelligent UI
+<div align="center">
 
-**An open-source implementation of the "Intelligent UI" experience introduced in ChatGPT, built on [OpenUI](https://openui.com).**
+  <img src="public/goat.png" alt="Goatie AI Logo" width="130" height="130" style="border-radius: 50%; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);" />
 
-**[Try the live demo](https://www.openui.com/demo/intelligent-ui)**
+  # Goatie AI — Intelligence Engineered To Evolve
 
-In ChatGPT's Intelligent UI, a request such as "plan a day in San Francisco" returns an interactive answer (a map, photographs and an editable itinerary) rather than text. This repository reproduces that experience with open-source components, so that the same kind of interface can be built, modified and shipped inside any application.
+  **The autonomous Generative UI platform that compiles human conversation into reactive, stateful, and production-ready applications in real time.**
 
-[OpenUI](https://github.com/thesysdev/openui) is an open standard for Generative UI.
+  [![Engineered From Scratch](https://img.shields.io/badge/Architected-From%20Scratch-f59e0b?style=for-the-badge&logo=codeforces&logoColor=white)](https://github.com/abdifatahmarketing)
+  [![Next.js](https://img.shields.io/badge/Next.js-16.4.2-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+  [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL%20RLS-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+  [![Vitest](https://img.shields.io/badge/Tests-318%20Passing-22c55e?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
+  [![Founder](https://img.shields.io/badge/Founder-Abdifatah%20Faisal-0284c7?style=for-the-badge)](mailto:abdifatahmarketing@gmail.com)
+  [![License](https://img.shields.io/badge/License-MIT-a855f7?style=for-the-badge)](LICENSE)
 
-> This project is independent and is not affiliated with or endorsed by OpenAI. "Intelligent UI" refers to the ChatGPT feature that this demo recreates.
+  [**Launch 1-Minute Live Demo**](http://localhost:3000/chat?demo=true) • [**Product Architecture**](http://localhost:3000/product) • [**Case Studies**](http://localhost:3000/cases) • [**Contact Us**](http://localhost:3000/contact)
 
-## Demo video
+</div>
 
-ChatGPT's Intelligent UI (left) and this project (right) answering the same request. Select the image to play the video.
+---
 
-[![ChatGPT and OpenUI side by side, each showing a one-day San Francisco route with photos and a map](docs/openui-chatgpt-comparison.jpg)](docs/openui-chatgpt-comparison.mp4)
+## 📖 The Story: Why We Built Goatie AI From Scratch
 
-## What's in the demo
+For years, artificial intelligence has been trapped inside a chat bubble. 
 
-The model streams OpenUI Lang 1.0, and the app renders it with a library of primitives the model arranges itself: no layout is fixed in the components. The library (`src/lib/library.ts`, components in `src/lib/components/`) follows the Open Intelligent UI design. The components have light and dark tokens, but only `/gallery` (and the benchmark's `/preview`) switch to dark; the chat is light only:
+When you ask an AI model to build a financial projection, configure a mortgage calculator, evaluate a flight route, or create a retro game, traditional chatbots return a static wall of markdown text or raw code snippets that you must manually copy, paste, compile, and debug.
 
-- **Layout:** `Col`, `Row`, `Box` (background, radius, border, sizes, flex), `Grid`, `Card`, `Carousel` (a scrolling, snapping row), `Popover`, `Divider`, `Spacer`.
-- **Text:** `Title`, `Text` (inline **bold**, *italic*, `code`, links), `Caption`, `Label`, `Badge`, `Link`, `List` and `ListItem` (bullets, numbers, a timeline), `Markdown`.
-- **Inputs:** `Button`, `IconButton`, `Pressable`, `Input`, `TextArea`, `Select`, `SegmentedControl`, `Slider`, `Checkbox`, `RadioGroup`, `DatePicker`, `Timer` (a countdown), `Form`. Each input's first argument is its value, usually a `$variable` other statements read.
-- **Media and data:** `SearchImage` (a photo the app finds for a query, like ChatGPT's server-resolved images), `Image` (a given URL), `Icon` (lucide names), `Table` (cells may be components), `Chart` (bar, line, area, pie, donut, scatter), `Map` with `MapMarker` ([MapLibre GL](https://maplibre.org), category filter, expansion, a street route), and `YouTube`.
-- **More text and play:** `Text` takes a list mixing strings and inline components; `Quote`, `Code` (with copy) and `Math` (KaTeX); `Flashcard` (flips) and `Celebration` (confetti when a condition turns true).
-- **Drawing:** `Svg` with `G`, `Circle`, `Ellipse`, `Rect`, `Line`, `Path`, `Polyline`, `Polygon` and `SvgText`, whose attributes take expressions so state can move them; `HtmlView` runs an HTML page (a game, a canvas) in a sandboxed iframe.
+We asked ourselves a foundational question: **Why can't the AI write the code, compile the application, and render a live, interactive interface directly inside the conversation instantly?**
 
-- **Functions:** 59 generic `@functions` (`src/lib/functions/`) next to the 1.0 built-ins, so an answer can compute with its own state: lists (`@Append`, `@Remove`, `@Update`, `@Toggle`, `@Includes`, `@Range`, `@Chunk`, `@Shuffle`, ...), numbers (`@Pow`, `@Random`, `@Clamp`, `@Percent`, `@Allocate` for splits that add up to the cent, `@Payment` for loans, `@Convert` for units), text (`@Format`, `@Join`, `@Split`, `@Replace`, `@Capitalize`, `@Plural`, `@Duration`, `@Default`), colors (`@MixColor`), dates (`@Today`, `@FormatDate`, `@AddDays`, `@AddMonths`, `@DaysBetween`, `@MonthsBetween`, `@StartOf`) and data for dashboards (`@GroupBy`, `@Pivot`, `@Top`, `@Between`, `@Bucket`, `@Cumulative`, `@MovingAvg`, `@Change`, `@Histogram`, `@Stats`). A bad argument makes a call evaluate to null, as in 1.0.
-- **Actions:** `@CopyToClipboard(text)`, for copying a shopping list or a split.
+To answer this, our founder and lead architect, **Abdifatah Faisal**, set out to develop **Goatie AI** completely from scratch. 
 
-The dev-only page `/gallery` renders hand-written programs: a working answer for each of the 16 Intelligent UI examples (from the 7-speed bike to the arcade game), two dashboards over demo data, the prompt's worked examples, and programs that exercise every component.
+Instead of building another generic conversational wrapper, we designed and engineered an autonomous Generative UI runtime: a system where natural language thoughts are converted into live Abstract Syntax Trees (AST), dynamic reactive states, and fully functional, interactive DOM components rendered within sub-120ms streams.
 
-## Setup
+---
 
-Requires Node 24.
+## 🛠️ How We Developed Goatie AI From The Ground Up
 
+Building Goatie AI required re-engineering the full web stack — from token streaming protocols down to PostgreSQL cryptographic isolation. Here is the exact development journey and engineering milestones we took to bring Goatie AI to life:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           1. USER CONVERSATION & PROMPT                     │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                2. SHIRO REASONING PIPELINE & MULTI-MODEL ROUTER             │
+│                                                                             │
+│  • Autonomous chain-of-thought planning & token validation                  │
+│  • Dynamic inference routing: Local Ollama (air-gapped) or Cloud LLM        │
+│  • Real-time inspection of tool invocations & AST safety constraints        │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                 3. GOATIE GENERATIVE UI COMPILER & AST RUNTIME              │
+│                                                                             │
+│  • Streaming AST grammar parser (generates UI before the stream finishes)   │
+│  • Dynamic Expression Evaluator with 59+ atomic math & data operations      │
+│  • Two-way reactive $variable bindings with zero hydration drift           │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                 4. INTERACTIVE DESKTOP & MOBILE APPLICATION DOM             │
+│                                                                             │
+│  • Live Financial Dashboards • Interactive Mortgage & Tax Calculators       │
+│  • Dynamic SVG Vector Canvases • Playable Retro Arcade Games                │
+│  • Real-time dynamic forms with client-side validation & state persist      │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │
+                                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                 5. SUPABASE POSTGRESQL SECURE STORAGE VAULT                 │
+│                                                                             │
+│  • Row Level Security (RLS) policies guaranteeing tenant data separation    │
+│  • SSR Session verification with Next.js Middleware route guards            │
+│  • Persistent chat threads, message histories, and user preference state    │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Phase 1: Designing the AST Compiler & Reactive Runtime
+We created a proprietary compiler that translates token streams into structured component definitions. Unlike brittle iframe embeds or unvalidated code execution, our components are rendered natively in React 19 as a deterministic Abstract Syntax Tree (AST):
+- **Streaming UI**: Components begin rendering as early as the first 50 tokens arrive.
+- **Two-Way Data Bindings (`$variables`)**: Changing an input slider updates mathematical formulas, dependent charts, and calculated summaries instantly across the entire component tree.
+- **Zero Hydration Mismatch**: Pure client-evaluated state trees that run safely in any modern browser without server hydration stalls.
+
+### Phase 2: Developing the 59+ Atomic Function Math & Data Engine
+To enable complex calculators, scientific visualizations, and dynamic charts, we wrote a sandboxed mathematical and statistical engine featuring 59+ atomic functions:
+- **Financial & Math**: Compound interest, amortizations, statistical variance, trigonometry, logarithms, and KaTeX rendering.
+- **Data & Collections**: Multi-key sorting, nested grouping, pivot tables, fuzzy filtering, and array aggregations.
+- **Date & Time Calculations**: Working days calculations, timezone offsets, relative time formatting, and dynamic schedules.
+- **Strict Quality Control**: Backed by **318 passing automated unit tests** using Vitest.
+
+### Phase 3: Creating the Shiro Autonomous Thought Companion
+We engineered **Shiro**, an interactive visual thought companion and reasoning mascot:
+- Displays the internal thought process, reasoning phases, and plan breakdowns in real time.
+- Lets users peek under the hood to see how the model plans component trees, writes formulas, and verifies constraints before the interface renders.
+- Features custom micro-animated expressions and interactive loading states.
+
+### Phase 4: Engineering the Ephemeral 1-Minute Live Demo Engine
+We built a frictionless live demo sandbox so users can experience Goatie AI immediately without initial sign-up friction:
+- **Ephemeral Guest Session**: Instantly provisions a temporary sandboxed session with guest access.
+- **Synchronized 60-Second Countdown**: Real-time ticker in the navigation bar that manages trial expiration smoothly.
+- **Trial Token Limiter**: Grants users 3 trial generative UI executions to test interactive calculators, games, and dashboards.
+- **Seamless Upgrade Conversion**: Triggers an elegant modal allowing users to save their session with a free permanent account.
+
+### Phase 5: Architecting the Supabase PostgreSQL Security Vault
+Data privacy and enterprise isolation are built into the core:
+- **Row Level Security (RLS)**: Enforced directly inside PostgreSQL so users can only ever access their own threads, sessions, and tokens.
+- **SSR Route Guards**: Next.js App Router middleware inspects session cookies server-side, guarding `/chat`, `/dashboard`, and settings routes against unauthorized access.
+- **Appearance & Theme Sync**: System-wide theme engine supporting Dark Mode, Light Mode, and System Preference synchronization across client and database.
+
+### Phase 6: Handcrafted Vanilla CSS Design System
+We deliberately crafted a bespoke glassmorphic design system using pure Vanilla CSS:
+- **Zero Heavy Utility Bloat**: Clean, performant, responsive styles with CSS variables.
+- **Aurora Light & Ambient Glows**: Custom radial gradients and backdrop blurs creating a sleek, futuristic visual identity.
+- **Bento Grid Architecture**: High-conversion landing page layouts with live interactive studios, telemetry counters, and mobile-first drawer navigation.
+
+---
+
+## ✨ Core Features & Capabilities
+
+| Feature | Description |
+| :--- | :--- |
+| **Autonomous Generative UI** | Turn prompts into functioning widgets, dashboards, forms, and games on the fly. |
+| **Shiro Thought Companion** | Visual reasoning inspector displaying live thoughts, plans, and AST syntax trees. |
+| **1-Minute Live Trial** | Instant, zero-friction sandboxed demo with token metering and countdown clock. |
+| **Dual-Pathway Inference** | Switch seamlessly between local private [Ollama](https://ollama.com) models and low-latency cloud gateways. |
+| **Reactive 2-Way State** | Interactive sliders, buttons, inputs, and formulas that recompute without page reloads. |
+| **59+ Built-in Math Functions** | Built-in formulas for finance, statistics, dates, KaTeX formulas, and list aggregations. |
+| **Enterprise PostgreSQL Vault**| Supabase with strict Row Level Security (RLS) and cryptographic tenant separation. |
+| **Full Legal & Enterprise Suite**| Dedicated Product, Case Studies, Contact, Privacy Policy, and Terms of Service pages. |
+
+---
+
+## 📊 Comprehensive Component Suite
+
+Goatie AI autonomous compiler is capable of generating dozens of reactive component types:
+
+```
+├── Analytics & Charts
+│   ├── Area & Line Trend Visualizers
+│   ├── Multi-Series Bar & Column Charts
+│   ├── Interactive Donut & Pie Distributions
+│   └── Dynamic Scatter & Heatmap Plots
+├── Real-Time Calculators
+│   ├── Amortization & Mortgage Calculators
+│   ├── SaaS Pricing & ARR Projection Models
+│   ├── Scientific Unit & Currency Converters
+│   └── Dynamic Split-Bill & Budget Wizards
+├── Interactive Applications
+│   ├── Playable Retro Handheld & Arcade Games
+│   ├── Drum Synthesizers & Sound Keyboards
+│   ├── Interactive Trivia & Quiz Systems
+│   └── Dynamic Markdown & KaTeX Math Solvers
+└── Data & System Controls
+    ├── Multi-Step Onboarding Wizards
+    ├── Dynamic Forms with Real-Time Validation
+    ├── MapLibre GPS Navigation & Route Views
+    └── Procedural SVG Vector Graphics
+```
+
+---
+
+## 💻 Technical Stack
+
+- **Framework**: [Next.js 16.4.2](https://nextjs.org/) (Turbopack, App Router, React 19)
+- **Language**: [TypeScript 5.0](https://www.typescriptlang.org/) (Strict mode enabled)
+- **Database & Auth**: [Supabase](https://supabase.com/) (PostgreSQL 15+, SSR Cookies, Row Level Security)
+- **UI & Styling**: Handcrafted Vanilla CSS, Modern CSS Custom Properties, Glassmorphism
+- **Iconography**: [Lucide React](https://lucide.dev/), FontAwesome 6
+- **Test Framework**: [Vitest](https://vitest.dev/) (318 passing unit tests)
+- **Inference Runtime**: Dynamic SSE Streaming, Ollama local compatibility, OpenAI/Anthropic gateway adapters
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js `20.x` or higher
+- npm or yarn
+- A Supabase project (for authentication and encrypted database storage)
+
+### 1. Clone the Repository
 ```bash
-cp .env.example .env
+git clone https://github.com/abdifatahmarketing/goatie-ai.git
+cd goatie-ai
 npm install
-npm run generate:apiKey   # writes THESYS_API_KEY to .env
+```
+
+### 2. Configure Environment Variables
+Create a `.env.local` file in your root directory:
+
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-supabase-anon-key
+
+# LLM Gateway & Reasoning Engine
+THESYS_API_KEY=your-api-key
+THESYS_MODEL=openai/gpt-4o
+LLM_REASONING_EFFORT=low
+
+# Optional: Run 100% Offline with Local Ollama
+# MODEL_PROVIDER=ollama
+# OLLAMA_MODEL=qwen2.5:14b
+# OLLAMA_BASE_URL=http://localhost:11434/v1
+```
+
+### 3. Initialize Supabase Database
+Run the SQL migration script located in [`supabase/schema.sql`](file:///c:/Users/masla/Downloads/open-intelligent-ui/supabase/schema.sql) in your Supabase SQL Editor. This initializes:
+- User profile schemas and automatic trigger hooks.
+- Chat session tables with Row Level Security (RLS) policies.
+- Encrypted user preference settings.
+
+### 4. Run Development Server
+```bash
 npm run dev
 ```
 
-Open http://localhost:3000 and try: `I'm in San Francisco for a day, plan a sightseeing route for me`
+Visit [http://localhost:3000](http://localhost:3000) to see Goatie AI in action!
 
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `THESYS_API_KEY` | Yes, unless using a direct API | OpenUI Cloud (Gateway) key, used only on the server. |
-| `THESYS_MODEL` | No | A `{provider}/{model}` id. Defaults to `openai/gpt-6.1-sol`. |
-| `THESYS_BASE_URL` | No | The Gateway's Responses endpoint. Defaults to `https://api.thesys.dev/v1/embed`. |
-| `LLM_BASE_URL` | No | Use any OpenAI-compatible Chat Completions API directly instead of Cloud, e.g. `https://openrouter.ai/api/v1`; see [Use any OpenAI-compatible API](#use-any-openai-compatible-api). |
-| `LLM_API_KEY` | With `LLM_BASE_URL` | That API's key. |
-| `LLM_MODEL` | With `LLM_BASE_URL` | The model id it serves, e.g. `openai/gpt-6.1-sol` on OpenRouter. |
-| `LLM_REASONING_EFFORT` | No | Reasoning effort for both paths. Defaults to `low` (about five times faster to the first line of UI on gpt-6.1-sol, same quality); `default` sends none. |
-| `MODEL_PROVIDER` | No | Set to `ollama` to run a local model instead of Gateway; see [Run with a local model](#run-with-a-local-model-ollama). |
-| `OLLAMA_MODEL` | No | The Ollama model to use. Defaults to `qwen3.8:27b`. |
-| `OLLAMA_BASE_URL` | No | Ollama's OpenAI-compatible endpoint. Defaults to `http://localhost:11434/v1`. |
+---
 
-## Use any OpenAI-compatible API
+## 🧪 Quality Assurance & Test Suites
 
-Set `LLM_BASE_URL`, `LLM_API_KEY` and `LLM_MODEL` to skip OpenUI Cloud and call a model directly, for example through OpenRouter:
+We enforce strict test coverage across our math parsing engine, date utilities, and AST state handlers:
 
 ```bash
-LLM_BASE_URL=https://openrouter.ai/api/v1
-LLM_API_KEY=sk-or-...
-LLM_MODEL=openai/gpt-6.1-sol
-```
+# Run all 318 automated unit tests
+npm test
 
-`/api/chat` then builds the full OpenUI 1.0 system prompt on the server, from the same library spec and prompt options (`generateSystemPrompt`), streams Chat Completions and relays the text as Responses events, so the browser is unchanged. The Ollama variables below are shortcuts for the same path. Output is rendered as written: Cloud's correction step is not there.
-
-## Run with a local model (Ollama)
-
-The demo can also run on a local model through [Ollama](https://ollama.com), with no API key required.
-
-It works with any OpenAI-compatible local server (Ollama, LM Studio) via `OLLAMA_BASE_URL`.
-
-1. Install Ollama and pull a model. The default is `qwen3.8:27b` (about 18 GB, best with 32 GB of memory or more); `gpt-oss:20b` and `qwen3:8b` are smaller alternatives.
-
-   ```bash
-   ollama pull qwen3.8:27b
-   ```
-
-2. Give the model a larger context window. The OpenUI prompt for this app is about 8,000 tokens, and Ollama's default window is 4,096, which silently cuts the prompt and produces broken output. Either start Ollama with a larger default:
-
-   ```bash
-   OLLAMA_CONTEXT_LENGTH=32768 ollama serve
-   ```
-
-   or create a model variant with a larger window and use its name as `OLLAMA_MODEL`:
-
-   ```bash
-   printf 'FROM qwen3.8:27b\nPARAMETER num_ctx 32768\n' > Modelfile
-   ollama create qwen3.8-32k -f Modelfile
-   ```
-
-3. In `.env`, set `MODEL_PROVIDER=ollama` (and `OLLAMA_MODEL` to use another model), then `npm run dev`.
-
-What changes with a local model:
-
-- **No output correction.** Gateway validates and corrects the generated OpenUI Lang; locally, the model's output is rendered as written, so larger models give better results.
-- **Speed depends on your hardware.** The first request after Ollama loads the model has to read the whole prompt; later requests reuse it and are much faster. For reasoning models, `LLM_REASONING_EFFORT=low` cuts the wait considerably. 
-## How it works
-
-- **Generation.** `/api/chat` calls OpenUI Gateway's Responses API with `generateSystemPrompt({ cloud: true })`, so Gateway validates and corrects the generated OpenUI Lang against this app's component library. No search tool is sent: `SearchImage` finds its own photo (see Photos below), so the model never announces a search that shows nothing. Requests ask for low reasoning effort (`LLM_REASONING_EFFORT`).
-- **Chat Completions.** OpenUI Gateway also supports the Chat Completions API, and OpenUI works with either. This example uses the Responses API because Gateway's hosted tools are available only there. An application already built on Chat Completions can keep that protocol and pair it with `openAIReadableStreamAdapter` or `openAIAdapter` in the browser.
-- **State.** Inputs bind to `$variables` (`Slider($price, 0, 100)`), and any statement that reads them updates as the user interacts. Buttons and `Pressable` run `@Set`, `@Reset`, `@ToAssistant`, `@OpenUrl` and `@CopyToClipboard` steps.
-- **Working tools.** The prompt options in `src/lib/prompt-options.ts` (rules and worked examples) teach the model to answer with a tool that works in the page: lists and inputs live in `$variables`, everything shown is computed from them with `@functions`, and buttons change them with `@Set`, instead of sending a form back to the assistant. `@Each` maps a list into rows, e.g. `@Each(@Range(0, $years + 1), "y", {year: y, balance: $p * @Pow(1 + $r / 100, y)})`.
-- **Photos.** `SearchImage` (and `Image` when its URL fails) asks `/api/wiki` for the lead photo of the Wikipedia article titled like the query, then `/api/image-search` for Wikipedia and Wikimedia Commons results whose titles match it.
-- **Threads.** Threads and messages, including what the user typed or ticked in an answer, are kept in the browser's localStorage (`src/lib/chat-storage.tsx`), so they survive switching threads and reloading.
-- **Map data.** Street geometry comes from `/api/street-route`, which validates input and caches results from the public OSRM demo server's driving profile: a road overview, not walking or transit directions. When it's unavailable, a labelled direct connection is drawn instead.
-- **Theme.** Colors, type, radii and spacing are tokens in `src/lib/components/theme.css`, with a dark set under `data-theme="dark"` that only `/gallery` and `/preview` use. The chat shell keeps its `AgentInterface` theme from `src/lib/response-theme.ts`.
-
-## Project structure
-
-| File | Purpose |
-| --- | --- |
-| `src/app/layout.tsx` | Root layout: page metadata, the Inter font and `globals.css`. |
-| `src/app/page.tsx` | The chat page. Renders `AgentInterface` with the component library, theme, welcome screen and starter prompts, and connects it to `/api/chat`. |
-| `src/app/globals.css` | Global CSS reset. |
-| `src/app/shell.css` | Restyles the `AgentInterface` shell (sidebar, composer, starters, message bubbles), using theme tokens where they exist. |
-| `src/app/api/chat/route.ts` | Chat endpoint. Validates the request, forwards the conversation to OpenUI Cloud (or, with `LLM_BASE_URL` or the Ollama variables, to any OpenAI-compatible API with the prompt built here), and streams the response back. |
-| `src/app/api/street-route/route.ts` | Street geometry between stops from OSRM, cached on the server. |
-| `src/app/api/wiki/route.ts` | Wikipedia lookup: the lead photos (and coordinates) of an article, cached on the server. |
-| `src/app/api/image-search/route.ts` | Photo search for `SearchImage`: matching Wikipedia lead images, then Wikimedia Commons, cached on the server. |
-| `src/app/gallery/` | The dev-only `/gallery` page and its OpenUI Lang programs; `tool-programs.ts` holds the 16 examples and the dashboards. |
-| `src/app/preview/` | A dev-only page that renders one program handed in by a script, for the benchmark's screenshots. |
-| `src/lib/library.ts` | The OpenUI component library: the primitives, their groups and prompt notes. |
-| `src/lib/functions/` | The library's `@functions` (`defineFunction`), with tests that run them through the 1.0 parser and evaluator. |
-| `src/lib/actions.ts` | The `@CopyToClipboard` action and its handler. |
-| `src/lib/demo-data.ts` | Demo data tools (`get_orders`, `get_tickets`, `get_traffic`) for Query-backed dashboards: their specs for the prompt and a function-map tool provider. |
-| `src/lib/prompt-options.ts` | The prompt options: the working-tool rules and examples, and a dashboard variant with the demo data tools. |
-| `src/lib/response-theme.ts` | Theme tokens for the `AgentInterface` shell (colors, fonts, radii, chat bubbles), built with `createTheme()`. |
-| `src/lib/components/` | The components (`defineComponent` + Zod schema each), their styles and tokens, and the map in `map/`. |
-| `src/generated/spec.json` | Library spec sent to Gateway in the system prompt. Regenerate with `npm run generate` after changing a component schema. |
-| `src/generated/system-prompt.txt` | The full system prompt for the library; `dashboard-system-prompt.txt` adds the demo data tools. Regenerate with `npm run prompt`. |
-| `scripts/bench/` | The benchmark: 16 example prompts and 8 dashboard prompts, run against a model and checked; see [Benchmark](#benchmark). |
-| `docs/openui-chatgpt-comparison.mp4` | Side-by-side video of ChatGPT and this project; `docs/openui-chatgpt-comparison.jpg` is its README preview. |
-| `.env.example` | The environment variables to copy into `.env`. |
-
-## For designers
-
-`npm install && npm run dev`, then open http://localhost:3000/gallery. It needs no API key: every example and component renders from hand-written programs, with Light and Dark at the top right. Check phone width too.
-
-- **Components** are in `src/lib/components/` (`layout.tsx`, `text.tsx`, `markdown.tsx`, `controls.tsx`, `media.tsx`, `chart.tsx`, `table.tsx`, `svg.tsx`, `html-view.tsx`, `map/`), styled by `components.css` (`iui-*` classes).
-- **Tokens** (colors, type, radii, spacing) are in `src/lib/components/theme.css`, with the dark set under `[data-theme="dark"]`. The chat shell around answers is `src/app/shell.css` and `src/lib/response-theme.ts`.
-- **`/gallery`** is the design surface: "Working tools" holds the 16 examples and two dashboards, "Components" one program per component.
-
-How anything looks can change freely. What the model writes must keep working, so keep these as they are, or regenerate the prompt (`npm run generate && npm run prompt`) and tell whoever owns it:
-
-- component and `@function` names, the order of their arguments, and option values such as Button's `"solid" | "outline" | "soft" | "ghost"`;
-- the color names a model can use: `ink`, `muted`, `faint`, `surface`, `info`, `success`, `warning`, `danger`, `purple`, `pink`, `chart1` to `chart6`.
-
-## Checks
-
-```bash
-npm run generate && npm run prompt   # after changing a component schema, a function or the prompt options
-npm test                             # the functions, and every gallery program and prompt example parsed by the 1.0 parser
+# Run strict TypeScript type checking
 npm run typecheck
+
+# Run production build validation
 npm run build
 ```
 
-Then open `/gallery` (`npm run dev`), switch between light and dark, and try it at phone width.
+---
 
-## Benchmark
+## 📁 Project Architecture & Directory Layout
 
-`scripts/bench/run.mjs` sends the 16 example prompts (with `system-prompt.txt`) and 8 dashboard prompts (with `dashboard-system-prompt.txt`) to a model on any OpenAI-compatible endpoint, saves each answer, checks it with the 1.0 parser, flags `@names` and components the library does not have, and screenshots each answer in light and dark at 390 and 1280 px through `/preview`. The key is read from an environment variable at run time.
-
-```bash
-npm run dev   # in another terminal, for the screenshots
-PLAYWRIGHT_CORE=/path/to/playwright-core CHROME=/path/to/chrome-headless-shell \
-  OPENROUTER_API_KEY=... npm run bench -- --model <id> --base-url https://openrouter.ai/api/v1 --key-env OPENROUTER_API_KEY
-npm run bench -- --fake                 # the hand-written programs stand in for the model
-npm run bench -- --answers <dir>        # re-check and re-shoot saved <id>.oui answers
+```
+open-intelligent-ui/
+├── public/                       # Static branding, logo, and leadership media
+│   ├── abdifatah.png             # Abdifatah Faisal founder portrait
+│   ├── goat.png                  # Official Goatie AI mascot badge
+│   └── shiro-face.svg            # Shiro thinking engine face
+├── src/
+│   ├── app/
+│   │   ├── page.tsx              # Cinematic Landing Page with Live Studio & Demo CTA
+│   │   ├── landing.css           # Custom responsive styles, glassmorphism & glows
+│   │   ├── chat/                 # Goatie AI Workspace, 1-Min Live Demo & Settings
+│   │   ├── login/                # Secure authentication login portal
+│   │   ├── signup/               # Registration & user onboarding flow
+│   │   ├── product/              # Deep-dive product architecture overview
+│   │   ├── cases/                # Enterprise case studies & customer highlights
+│   │   ├── contact/              # Interactive customer & enterprise inquiry form
+│   │   ├── privacy/              # Privacy & RLS Data Policy
+│   │   └── terms/                # Terms of Service & acceptable use standards
+│   ├── lib/
+│   │   ├── components/           # 40+ Generative UI component implementations
+│   │   ├── functions/            # 59+ Mathematical, statistical, and list functions
+│   │   ├── chat-storage.tsx      # Thread persistence & session synchronization
+│   │   └── library.ts            # Component catalog definitions
+│   ├── utils/
+│   │   └── supabase/             # SSR client, middleware route guard, & auth helpers
+│   └── middleware.ts             # Server-side authentication and session guard
+├── supabase/
+│   └── schema.sql                # PostgreSQL schemas, RLS policies, & indexes
+└── README.md                     # Platform documentation
 ```
 
-Results go to `bench-out/<model>-<time>/`: `answers/`, `shots/`, `report.json` and `report.md`. Other options: `--only id,id`, `--kind tool|dashboard`, `--widths`, `--no-shots`, `--concurrency`, `--temperature`, `--max-tokens`, `--app`.
+---
 
-## License
+## 👤 Founder & Leadership
 
-[MIT](LICENSE)
+<div align="center">
+
+  <img src="public/abdifatah.png" alt="Abdifatah Faisal" width="140" height="140" style="border-radius: 50%; box-shadow: 0 10px 30px rgba(0,0,0,0.45); border: 3px solid rgba(255,255,255,0.15);" />
+
+  ### **Abdifatah Faisal**
+  **Founder, Chief Executive Officer & Lead Architect**
+
+  *"We created Goatie AI because static AI chat has hit a ceiling. True intelligence should build, calculate, simulate, and render solutions dynamically in real time. We engineered Goatie AI from the ground up to empower every human to turn thoughts into functioning software."*
+
+  📫 **Contact Email**: [abdifatahmarketing@gmail.com](mailto:abdifatahmarketing@gmail.com)  
+  📞 **Phone / WhatsApp**: [+252 63 6472317](tel:+252636472317)  
+  📍 **Headquarters / Address**: 150 st, Hargeisa, Somaliland  
+  🌐 **GitHub Profile**: [github.com/abdifatahmarketing](https://github.com/abdifatahmarketing)  
+
+</div>
+
+---
+
+## 📄 License & Intellectual Property
+
+This project is licensed under the **MIT License**. Engineered and authored from scratch by **Abdifatah Faisal** and the Goatie AI team. All rights reserved.

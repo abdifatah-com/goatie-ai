@@ -37,27 +37,27 @@ const direct = process.env.LLM_BASE_URL
 
 const backend = direct
   ? {
-      kind: "direct" as const,
-      name: direct.name,
-      model: direct.model ?? "",
-      instructions: generateSystemPrompt({ library: librarySpec, promptOptions }),
-      connect: () => new OpenAI({ apiKey: direct.apiKey ?? "none", baseURL: direct.baseURL }),
-      missingConfig: direct.model ? undefined : "LLM_MODEL is not set. Set it to the model id your LLM_BASE_URL serves.",
-    }
+    kind: "direct" as const,
+    name: direct.name,
+    model: direct.model ?? "",
+    instructions: generateSystemPrompt({ library: librarySpec, promptOptions }),
+    connect: () => new OpenAI({ apiKey: direct.apiKey ?? "none", baseURL: direct.baseURL }),
+    missingConfig: direct.model ? undefined : "LLM_MODEL is not set. Set it to the model id your LLM_BASE_URL serves.",
+  }
   : {
-      kind: "cloud" as const,
-      name: "OpenUI Gateway",
-      model: process.env.THESYS_MODEL ?? "openai/gpt-6.1-sol",
-      instructions: generateSystemPrompt({
-        cloud: true,
-        library: librarySpec,
-        promptOptions: { examples: promptOptions.examples, additionalRules: promptOptions.additionalRules },
-      }),
-      connect: () => new OpenAI({ apiKey: process.env.THESYS_API_KEY, baseURL: process.env.THESYS_BASE_URL ?? "https://api.thesys.dev/v1/embed" }),
-      missingConfig: process.env.THESYS_API_KEY
-        ? undefined
-        : "THESYS_API_KEY is not set. Add it to .env, or set LLM_BASE_URL, LLM_API_KEY and LLM_MODEL to use any OpenAI-compatible API.",
-    };
+    kind: "cloud" as const,
+    name: "OpenUI Gateway",
+    model: process.env.THESYS_MODEL ?? "openai/gpt-6.1-sol",
+    instructions: generateSystemPrompt({
+      cloud: true,
+      library: librarySpec,
+      promptOptions: { examples: promptOptions.examples, additionalRules: promptOptions.additionalRules },
+    }),
+    connect: () => new OpenAI({ apiKey: process.env.THESYS_API_KEY, baseURL: "https://api.thesys.dev/v1/embed" }),
+    missingConfig: process.env.THESYS_API_KEY
+      ? undefined
+      : "THESYS_API_KEY is not set. Add it to .env, or set LLM_BASE_URL, LLM_API_KEY and LLM_MODEL to use any OpenAI-compatible API.",
+  };
 
 // Answers stream for up to about a minute; say so, in case the project is not on Fluid compute.
 export const maxDuration = 300;
@@ -136,30 +136,30 @@ export async function POST(req: Request) {
     events =
       backend.kind === "cloud"
         ? await client.responses.create(
+          {
+            model: backend.model,
+            instructions: backend.instructions,
+            input,
+            store: false,
+            // The longest answers (a game in HtmlView) are about 2,500 tokens; this only stops runaways.
+            max_output_tokens: MAX_OUTPUT_TOKENS,
+            ...(effort ? { reasoning: { effort } } : {}),
+            stream: true,
+          },
+          { signal: req.signal }, // propagate browser aborts
+        )
+        : asResponsesEvents(
+          await client.chat.completions.create(
             {
               model: backend.model,
-              instructions: backend.instructions,
-              input,
-              store: false,
-              // The longest answers (a game in HtmlView) are about 2,500 tokens; this only stops runaways.
-              max_output_tokens: MAX_OUTPUT_TOKENS,
-              ...(effort ? { reasoning: { effort } } : {}),
+              messages: [{ role: "system", content: backend.instructions }, ...toChatMessages(input)],
               stream: true,
-            },
-            { signal: req.signal }, // propagate browser aborts
-          )
-        : asResponsesEvents(
-            await client.chat.completions.create(
-              {
-                model: backend.model,
-                messages: [{ role: "system", content: backend.instructions }, ...toChatMessages(input)],
-                stream: true,
-                // OpenRouter reads reasoning.effort; OpenAI-style servers read reasoning_effort.
-                ...(effort ? { reasoning_effort: effort, reasoning: { effort } } : {}),
-              } as ChatCompletionCreateParamsStreaming,
-              { signal: req.signal },
-            ),
-          );
+              // OpenRouter reads reasoning.effort; OpenAI-style servers read reasoning_effort.
+              ...(effort ? { reasoning_effort: effort, reasoning: { effort } } : {}),
+            } as ChatCompletionCreateParamsStreaming,
+            { signal: req.signal },
+          ),
+        );
   } catch (err) {
     // Surface upstream failures (bad key, unknown model, server not running) as an HTTP error.
     const e = err as { status?: number; message?: string };
@@ -179,6 +179,13 @@ export async function POST(req: Request) {
           if (response) {
             delete response.instructions;
             delete response.safety_identifier;
+          }
+          // Debug: log event types and errors from the Gateway
+          const eventType = (event as { type?: string }).type;
+          if (eventType === "error" || eventType === "response.failed") {
+            console.error("[Gateway event]", JSON.stringify(event, null, 2));
+          } else {
+            console.log("[Gateway event]", eventType);
           }
           controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
           // The browser adapter ignores response.incomplete (the output cap was hit), so say so.

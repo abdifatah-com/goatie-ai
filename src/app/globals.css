@@ -95,3 +95,46 @@ strong {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
+
+/* ── Goatie AI / Shiro Face Loading Icon ── */
+@keyframes shiro-pulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Override OpenUI's default mascot loader & working indicators with Shiro Face */
+.openui-agent-mascot-loader,
+.openui-agent-ambient-loader svg,
+.openui-behind-the-scenes__mascot,
+.openui-agent-thread-message-loading svg {
+  background-image: url("/shiro-face.svg") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  animation: shiro-pulse 1.8s ease-in-out infinite !important;
+}
+
+.openui-agent-mascot-loader > *,
+.openui-agent-ambient-loader svg > *,
+.openui-behind-the-scenes__mascot > *,
+.openui-agent-thread-message-loading svg > * {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* Dedicated Shiro loading icon utility */
+.shiro-loading-icon {
+  display: inline-block;
+  background-image: url("/shiro-face.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  animation: shiro-pulse 1.8s ease-in-out infinite;
+}
+

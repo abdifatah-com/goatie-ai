@@ -3,23 +3,25 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "./analytics";
 
-// Variable Inter (no fixed weights), so the theme's in-between weights
-// (440, 560, 640) render as set.
 const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 const description =
-  "Ask anything and get an interactive answer instead of text: maps, photos, charts, drawings and working tools, built with OpenUI.";
+  "Goatie AI — Intelligence designed to evolve. Build applications that reason, adapt, and collaborate.";
 
 export const metadata: Metadata = {
-  // Link previews need absolute URLs. The public page is openui.com/demo/intelligent-ui, which
-  // the docs app proxies to this deployment, so opengraph-image.png resolves there too.
   metadataBase: new URL("https://www.openui.com"),
-  title: "Open Intelligent UI",
+  title: "Goatie AI — Intelligence Designed To Evolve",
   description,
-  openGraph: { title: "Open Intelligent UI", description, siteName: "OpenUI", type: "website" },
-  twitter: { card: "summary_large_image", title: "Open Intelligent UI", description },
+  icons: {
+    icon: "/shiro-face.svg",
+    shortcut: "/shiro-face.svg",
+    apple: "/shiro-face.svg",
+  },
+  openGraph: { title: "Goatie AI", description, siteName: "Goatie AI", type: "website" },
+  twitter: { card: "summary_large_image", title: "Goatie AI", description },
 };
 
 export default function RootLayout({

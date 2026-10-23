@@ -2,6 +2,8 @@ import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function TodosPage() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);

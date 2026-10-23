@@ -13,7 +13,7 @@ export const updateSession = async (request: NextRequest) => {
   });
 
   // If Supabase environment variables are not configured, pass through gracefully
-  if (!supabaseUrl || !supabaseKey) {
+  if (!supabaseUrl || !supabaseKey || supabaseUrl.includes("placeholder-project")) {
     return supabaseResponse;
   }
 

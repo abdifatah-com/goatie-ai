@@ -4,7 +4,7 @@ import "../auth.css";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
 
 export default function SignupPage() {
     const router = useRouter();
@@ -19,17 +19,23 @@ export default function SignupPage() {
     const [success, setSuccess] = useState<string | null>(null);
 
     useEffect(() => {
+        if (!isSupabaseConfigured()) return;
         supabase.auth.getUser().then(({ data }) => {
             if (data?.user) {
                 router.replace("/chat");
             }
-        });
+        }).catch(() => {});
     }, [router, supabase]);
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
         setSuccess(null);
+
+        if (!isSupabaseConfigured()) {
+            setError("Supabase authentication is not configured yet. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY in your Vercel environment variables.");
+            return;
+        }
 
         if (!email.trim() || !password) {
             setError("Please fill in both email and password.");
@@ -85,6 +91,10 @@ export default function SignupPage() {
 
     const handleOAuth = async (provider: "google" | "github") => {
         setError(null);
+        if (!isSupabaseConfigured()) {
+            setError("Supabase authentication is not configured yet. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY in your Vercel environment variables.");
+            return;
+        }
         setSocialLoading(provider);
         try {
             const { error: oAuthError } = await supabase.auth.signInWithOAuth({

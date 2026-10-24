@@ -290,7 +290,7 @@ open-intelligent-ui/
   📫 **Contact Email**: [abdifatahmarketing@gmail.com](mailto:abdifatahmarketing@gmail.com)  
   📞 **Phone / WhatsApp**: [+252 63 6472317](tel:+252636472317)  
   📍 **Headquarters / Address**: 150 st, Hargeisa, Somaliland  
-  🌐 **GitHub Profile**: [github.com/abdifatahmarketing](https://github.com/abdifatahmarketing)  
+  🌐 **GitHub Profile**: [github.com/abdifatahmarketing](https://github.com/abdifatah-com)  
 
 </div>
 

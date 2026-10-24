@@ -166,38 +166,60 @@ function ChatPageContent() {
 
     // Authenticate or initialize demo guest
     useEffect(() => {
-        const supabase = createClient();
-        supabase.auth.getUser().then(({ data }) => {
-            if (data?.user) {
-                setUser(data.user);
-                setIsCheckingAuth(false);
-            } else if (isDemo) {
-                // In demo mode, unauthenticated guests have user = null (no fake account / no log out)
+        let subscription: { unsubscribe: () => void } | null = null;
+
+        try {
+            const supabase = createClient();
+            supabase.auth.getUser().then(({ data }) => {
+                if (data?.user) {
+                    setUser(data.user);
+                    setIsCheckingAuth(false);
+                } else if (isDemo) {
+                    setUser(null);
+                    setIsCheckingAuth(false);
+                } else {
+                    router.replace("/login");
+                }
+            }).catch(() => {
+                if (isDemo) {
+                    setUser(null);
+                    setIsCheckingAuth(false);
+                } else {
+                    router.replace("/login");
+                }
+            });
+
+            const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+                if (session?.user) {
+                    setUser(session.user);
+                    setIsCheckingAuth(false);
+                } else if (isDemo) {
+                    setUser(null);
+                    setIsCheckingAuth(false);
+                } else {
+                    router.replace("/login");
+                }
+            });
+            subscription = data.subscription;
+        } catch {
+            if (isDemo) {
                 setUser(null);
                 setIsCheckingAuth(false);
             } else {
                 router.replace("/login");
             }
-        });
+        }
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            if (session?.user) {
-                setUser(session.user);
-                setIsCheckingAuth(false);
-            } else if (isDemo) {
-                setUser(null);
-                setIsCheckingAuth(false);
-            } else {
-                router.replace("/login");
-            }
-        });
-
-        return () => subscription.unsubscribe();
+        return () => subscription?.unsubscribe();
     }, [router, isDemo]);
 
     const handleSignOut = async () => {
-        const supabase = createClient();
-        await supabase.auth.signOut();
+        try {
+            const supabase = createClient();
+            await supabase.auth.signOut();
+        } catch {
+            // Ignore sign out error if unconfigured
+        }
         sessionStorage.removeItem("goatie_demo_start");
         sessionStorage.removeItem("goatie_demo_prompts_used");
         router.push("/login");

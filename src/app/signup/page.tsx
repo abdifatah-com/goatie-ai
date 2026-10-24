@@ -4,11 +4,10 @@ import "../auth.css";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createClient, isSupabaseConfigured } from "@/utils/supabase/client";
+import { createClient, getSupabaseConfig } from "@/utils/supabase/client";
 
 export default function SignupPage() {
     const router = useRouter();
-    const supabase = createClient();
 
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
@@ -19,21 +18,29 @@ export default function SignupPage() {
     const [success, setSuccess] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!isSupabaseConfigured()) return;
-        supabase.auth.getUser().then(({ data }) => {
-            if (data?.user) {
-                router.replace("/chat");
-            }
-        }).catch(() => {});
-    }, [router, supabase]);
+        const config = getSupabaseConfig();
+        if (!config.isConfigured) return;
+
+        try {
+            const supabase = createClient();
+            supabase.auth.getUser().then(({ data }) => {
+                if (data?.user) {
+                    router.replace("/chat");
+                }
+            }).catch(() => {});
+        } catch {
+            // Ignore during initial hydration check
+        }
+    }, [router]);
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
         setSuccess(null);
 
-        if (!isSupabaseConfigured()) {
-            setError("Supabase authentication is not configured yet. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY in your Vercel environment variables.");
+        const config = getSupabaseConfig();
+        if (!config.isConfigured) {
+            setError(config.error || "Supabase authentication is not configured.");
             return;
         }
 
@@ -50,6 +57,7 @@ export default function SignupPage() {
         setLoading(true);
 
         try {
+            const supabase = createClient();
             const { data, error: signUpError } = await supabase.auth.signUp({
                 email: email.trim(),
                 password,
@@ -91,12 +99,14 @@ export default function SignupPage() {
 
     const handleOAuth = async (provider: "google" | "github") => {
         setError(null);
-        if (!isSupabaseConfigured()) {
-            setError("Supabase authentication is not configured yet. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY in your Vercel environment variables.");
+        const config = getSupabaseConfig();
+        if (!config.isConfigured) {
+            setError(config.error || "Supabase authentication is not configured.");
             return;
         }
         setSocialLoading(provider);
         try {
+            const supabase = createClient();
             const { error: oAuthError } = await supabase.auth.signInWithOAuth({
                 provider,
                 options: {

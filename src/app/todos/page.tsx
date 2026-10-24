@@ -4,11 +4,31 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
+interface TodoItem {
+  id: string | number;
+  name?: string;
+  title?: string;
+  task?: string;
+  is_complete?: boolean;
+  inserted_at?: string;
+}
+
 export default async function TodosPage() {
   const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+  let todos: TodoItem[] | null = null;
+  let errorMessage: string | null = null;
 
-  const { data: todos, error } = await supabase.from("todos").select();
+  try {
+    const supabase = createClient(cookieStore);
+    const { data, error } = await supabase.from("todos").select();
+    if (error) {
+      errorMessage = error.message;
+    } else if (data) {
+      todos = data as unknown as TodoItem[];
+    }
+  } catch (err: unknown) {
+    errorMessage = err instanceof Error ? err.message : "Failed to initialize Supabase client.";
+  }
 
   return (
     <div style={{
@@ -42,7 +62,7 @@ export default async function TodosPage() {
           </Link>
         </div>
 
-        {error ? (
+        {errorMessage ? (
           <div style={{
             padding: "1rem",
             backgroundColor: "rgba(239, 68, 68, 0.1)",
@@ -51,7 +71,7 @@ export default async function TodosPage() {
             color: "#fca5a5",
             fontSize: "0.875rem"
           }}>
-            <strong>Connection note:</strong> {error.message}
+            <strong>Connection note:</strong> {errorMessage}
             <div style={{ marginTop: "0.5rem", color: "#94a3b8", fontSize: "0.8rem" }}>
               (If the <code>todos</code> table has not been created yet in your Supabase SQL editor, create it to see items listed here.)
             </div>

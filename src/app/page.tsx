@@ -268,10 +268,14 @@ export default function LandingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      if (data?.user) setIsAuthenticated(true);
-    });
+    try {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data }) => {
+        if (data?.user) setIsAuthenticated(true);
+      }).catch(() => {});
+    } catch {
+      // Supabase is unconfigured or unavailable
+    }
   }, []);
 
   /* ── Count-up animation ── */

@@ -12,8 +12,18 @@ export const updateSession = async (request: NextRequest) => {
     },
   });
 
-  // If Supabase environment variables are not configured, pass through gracefully
-  if (!supabaseUrl || !supabaseKey || supabaseUrl.includes("placeholder-project")) {
+  let isValidUrl = false;
+  if (supabaseUrl) {
+    try {
+      const parsed = new URL(supabaseUrl);
+      isValidUrl = parsed.protocol === "http:" || parsed.protocol === "https:";
+    } catch {
+      isValidUrl = false;
+    }
+  }
+
+  // If Supabase environment variables are missing or invalid, pass through gracefully
+  if (!supabaseUrl || !supabaseKey || !isValidUrl) {
     return supabaseResponse;
   }
 

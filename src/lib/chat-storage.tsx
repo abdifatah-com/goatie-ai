@@ -248,7 +248,6 @@ export function SaveMessages({ userId, isDemo }: { userId?: string | null; isDem
         const newMsgs = messages.slice(lastSavedCountRef.current);
         lastSavedCountRef.current = messages.length;
 
-        const supabase = createClient();
         const records = newMsgs.map((m) => ({
           thread_id: threadId,
           user_id: userId,
@@ -259,6 +258,7 @@ export function SaveMessages({ userId, isDemo }: { userId?: string | null; isDem
 
         void (async () => {
           try {
+            const supabase = createClient();
             await supabase.from("messages").insert(records);
           } catch {}
         })();
